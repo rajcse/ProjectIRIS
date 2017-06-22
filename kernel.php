@@ -91,7 +91,7 @@ class FbBot
                 } else {
                     $message = substr($msgarray[0], 12);
 
-                    $arr_post_body = array(
+                    $arr_post_body = []
                         "message_type"      =>      "SEND",
                         "mobile_number"     =>      $number,
                         "shortcode"         =>      $chikka['shortcode'],
@@ -99,7 +99,7 @@ class FbBot
                         "message"           =>      urlencode($message),
                         "client_id"         =>      $chikka['id'],
                         "secret_key"        =>      $chikka['secret']
-                    );
+                    ];
                     $query_string = "";
                     foreach($arr_post_body as $key => $frow)
                     {
@@ -118,7 +118,7 @@ class FbBot
                     if ($resp->status == 200) {
                         $answer = "Message sent to {$number}!";
                     } else {
-                        $answer = "Message sending failed! Please try again later. Error code {$resp->status}";
+                        $answer = "ERROR: Message sending failed! Please try again later. Error code {$resp->status}, query string {$query_string}";
                     }
                 }
                 $response = ['recipient' => ['id' => $senderId], 'message' => ['text' => $answer], 'access_token' => $this->accessToken];
