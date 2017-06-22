@@ -90,36 +90,35 @@ class FbBot
                     $answer = "ERROR: {$valid['message']}";
                 } else {
                     $message = substr($msgarray[0], 12);
-
-                    $arr_post_body = [
-                        "message_type"      =>      "SEND",
-                        "mobile_number"     =>      $number,
-                        "shortcode"         =>      $chikka['shortcode'],
-                        "message_id"        =>      $this->generateRandomString(32),
-                        "message"           =>      urlencode($message),
-                        "client_id"         =>      $chikka['id'],
-                        "secret_key"        =>      $chikka['secret']
-                    ];
-                    /*$query_string = "";
-                    foreach($arr_post_body as $key => $frow)
-                    {
-                        $query_string .= '&'.$key.'='.$frow;
-                    }*/
-                    $query_string = http_build_query($arr_post_body);
-                    $URL = "https://post.chikka.com/smsapi/request";
-                    $curl_handler = curl_init();
-                    curl_setopt($curl_handler, CURLOPT_URL, $URL);
-                    curl_setopt($curl_handler, CURLOPT_POST, count($arr_post_body));
-                    curl_setopt($curl_handler, CURLOPT_POSTFIELDS, $query_string);
-                    curl_setopt($curl_handler, CURLOPT_RETURNTRANSFER, TRUE);
-                    curl_setopt($curl_handler, CURLOPT_SSL_VERIFYPEER, FALSE);
-                    $response = curl_exec($curl_handler);
-                    curl_close($curl_handler);
-                    $resp = json_decode($response);
-                    if ($resp->status == 200) {
-                        $answer = "Message sent to {$number}!";
+                    if (strlen($message) > 420) {
+                        $answer = "ERROR: Message too long. Maximum is 420 characters.";
                     } else {
-                        $answer = "ERROR: Message sending failed! Please try again later. Error code {$resp->status}, query string {$query_string}";
+                        $arr_post_body = [
+                            "message_type"      =>      "SEND",
+                            "mobile_number"     =>      $number,
+                            "shortcode"         =>      $chikka['shortcode'],
+                            "message_id"        =>      $this->generateRandomString(32),
+                            "message"           =>      urlencode($message),
+                            "client_id"         =>      $chikka['id'],
+                            "secret_key"        =>      $chikka['secret']
+                        ];
+
+                        $query_string = http_build_query($arr_post_body);
+                        $URL = "https://post.chikka.com/smsapi/request";
+                        $curl_handler = curl_init();
+                        curl_setopt($curl_handler, CURLOPT_URL, $URL);
+                        curl_setopt($curl_handler, CURLOPT_POST, count($arr_post_body));
+                        curl_setopt($curl_handler, CURLOPT_POSTFIELDS, $query_string);
+                        curl_setopt($curl_handler, CURLOPT_RETURNTRANSFER, TRUE);
+                        curl_setopt($curl_handler, CURLOPT_SSL_VERIFYPEER, FALSE);
+                        $response = curl_exec($curl_handler);
+                        curl_close($curl_handler);
+                        $resp = json_decode($response);
+                        if ($resp->status == 200) {
+                            $answer = "Message sent to {$number}!";
+                        } else {
+                            $answer = "ERROR: Message sending failed! Please try again later. Error code {$resp->status}, query string {$query_string}";
+                        }
                     }
                 }
                 $response = ['recipient' => ['id' => $senderId], 'message' => ['text' => $answer], 'access_token' => $this->accessToken];
