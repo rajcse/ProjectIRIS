@@ -91,7 +91,7 @@ class FbBot
                 } else {
                     $message = substr($msgarray[0], 12);
 
-                    $arr_post_body = []
+                    $arr_post_body = [
                         "message_type"      =>      "SEND",
                         "mobile_number"     =>      $number,
                         "shortcode"         =>      $chikka['shortcode'],
