@@ -110,14 +110,14 @@ class FbBot
     public function validNumber($number)
     {
         // Check if actual digits
-        if (!is_numeric($number)) {
+        /*if (!is_numeric($number)) {
             return false;
         }
 
         // Check if 11 digits
         if (strlen($number) != 11) {
             return false;
-        }
+        }*/
 
         // Check if within allowed prefix
         $re = '/[0-9]\d{3}/';
