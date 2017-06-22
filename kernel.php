@@ -23,8 +23,6 @@ class FbBot
         $this->accessToken = $value;
     }
 
-    public
-
     function verifyToken($hub_verify_token, $challenge)
     {
         try {
