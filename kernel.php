@@ -83,11 +83,20 @@ class FbBot
                 $response = ['recipient' => ['id' => $senderId], 'message' => ['text' => $answer], 'access_token' => $this->accessToken];
             } else {
                 // Try to parse
-                $response = ['recipient' => ['id' => $senderId], 'message' => ['text' => print_r($msgarray, true)], 'access_token' => $this->accessToken];
+                $number = substr($msgarray[0], 0, 11);
+                if (!$this->validNumber($number)) {
+                    $answer = "Sorry, you've entered an invalid message format. Make sure you're using the 11-digit mobile number. The format is <11-digit mobile number>/Your message.";
+                    $response = ['recipient' => ['id' => $senderId], 'message' => ['text' => print_r($msgarray, true)], 'access_token' => $this->accessToken];
+                    $client->post($url, ['query' => $response, 'headers' => $header]);
+                    return true;
+                } else {
+                    $message = substr($msgarray[0], 12);
+                    $answer = "You're sending this to {$number}:\n\n{$message}";
+                    $response = ['recipient' => ['id' => $senderId], 'message' => ['text' => print_r($msgarray, true)], 'access_token' => $this->accessToken];
+                }
             }
 
             $response = $client->post($url, ['query' => $response, 'headers' => $header]);
-
             return true;
         }
 
