@@ -79,7 +79,7 @@ class FbBot
             ];
 
             if (in_array('help', $msgarray)) {
-                $answer = "My name is Iris, messenger of the gods. To send a message, enter a phone number and a slash, followed by your message. For example: 09771234567/Hello, my name is Iris.";
+                $answer = "My name is Iris. To send a message, enter a phone number and a slash, followed by your message. For example: 09771234567/Hello, my name is Iris.";
                 $response = ['recipient' => ['id' => $senderId], 'message' => ['text' => $answer], 'access_token' => $this->accessToken];
             }
 
