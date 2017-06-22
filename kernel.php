@@ -118,7 +118,7 @@ class FbBot
                     if ($resp->status == 200) {
                         $answer = "Message sent to {$number}!";
                     } else {
-                        $answer = "Message sending failed! Please try again later.";
+                        $answer = "Message sending failed! Please try again later. Error code {$resp->status}";
                     }
                 }
                 $response = ['recipient' => ['id' => $senderId], 'message' => ['text' => $answer], 'access_token' => $this->accessToken];
