@@ -84,50 +84,49 @@ class FbBot
             } else {
                 // Try to parse
                 $number = substr($msgarray[0], 0, 11);
-                if (!$this->validNumber($number)) {
-                    $answer = "Sorry, you've entered an invalid message format. Make sure you're using the 11-digit mobile number. The format is <11-digit mobile number>/Your message.";
-                    $response = ['recipient' => ['id' => $senderId], 'message' => ['text' => print_r($msgarray, true)], 'access_token' => $this->accessToken];
-                    $client->post($url, ['query' => $response, 'headers' => $header]);
-                    return true;
+                $valid = $this->validNumber($number);
+                if (!$valid['status']) {
+                    $answer = "ERROR: {$valid['message']}";
                 } else {
                     $message = substr($msgarray[0], 12);
                     $answer = "You're sending this to {$number}:\n\n{$message}";
-                    $response = ['recipient' => ['id' => $senderId], 'message' => ['text' => print_r($msgarray, true)], 'access_token' => $this->accessToken];
                 }
+                $response = ['recipient' => ['id' => $senderId], 'message' => ['text' => $answer], 'access_token' => $this->accessToken];
             }
 
-            $response = $client->post($url, ['query' => $response, 'headers' => $header]);
+            $client->post($url, ['query' => $response, 'headers' => $header]);
             return true;
         }
 
         catch(RequestException $e) {
             $response = json_decode($e->getResponse()->getBody(true)->getContents());
-            file_put_contents("test.json", json_encode($response));
+            file_put_contents(time() . ".json", json_encode($response));
             return $response;
         }
     }
 
     public function validNumber($number)
     {
-        // Check if actual digits
-        /*if (!is_numeric($number)) {
-            return false;
+        $return = [];
+
+        if (!is_numeric($number)) {
+            $return['status'] = false;
+            $return['message'] = 'Mobile number not valid digits.';
+        } else if (strlen($number) != 11) {
+            $return['status'] = false;
+            $return['message'] = 'Mobile number not 11 digits.';
+        } else {
+            $re = '/[0-9]\d{3}/';
+            preg_match_all($re, $number, $matches, PREG_SET_ORDER, 0);
+            $allowed = ['0915', '0927', '0995', '0938', '0919', '0813', '0913', '0981', '0934', '0922', '0917', '0935', '0817', '0939', '0921', '0907', '0914', '0998', '0941', '0923', '0945', '0936', '0905', '0940', '0929', '0908', '0918', '0999', '0942', '0924', '0955', '0976', '0906', '0946', '0989', '0909', '0928', '0951', '0943', '0931', '0956', '0997', '0916', '0948', '0920', '0910', '0947', '0912', '0944', '0932', '0994', '0975', '0926', '0950', '0930', '0911', '0949', '0970', '0925', '0933', '0992', '0977', '0978', '0979', '0996', '0937', '0973', '0974'];
+            if (!in_array($matches[0], $allowed)) {
+                $return['status'] = false;
+                $return['message'] = 'Prefix not in allowed list.';
+            } else {
+                $return['status'] = true;
+                $return['message'] = null;
+            }
         }
-
-        // Check if 11 digits
-        if (strlen($number) != 11) {
-            return false;
-        }*/
-
-        // Check if within allowed prefix
-        $re = '/[0-9]\d{3}/';
-        preg_match_all($re, $number, $matches, PREG_SET_ORDER, 0);
-        $allowed = ['0915', '0927', '0995', '0938', '0919', '0813', '0913', '0981', '0934', '0922', '0917', '0935', '0817', '0939', '0921', '0907', '0914', '0998', '0941', '0923', '0945', '0936', '0905', '0940', '0929', '0908', '0918', '0999', '0942', '0924', '0955', '0976', '0906', '0946', '0989', '0909', '0928', '0951', '0943', '0931', '0956', '0997', '0916', '0948', '0920', '0910', '0947', '0912', '0944', '0932', '0994', '0975', '0926', '0950', '0930', '0911', '0949', '0970', '0925', '0933', '0992', '0977', '0978', '0979', '0996', '0937', '0973', '0974'];
-        if (!in_array($matches[0], $allowed)) {
-            return false;
-        }
-
-        // Validation check
-        return true;
+        return $return;
     }
 }
