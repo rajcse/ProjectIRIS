@@ -68,7 +68,7 @@ class FbBot
     public function sendMessage($input)
     {
         try {
-            $client = new GuzzleHttpClient();
+            $client = new GuzzleHttp\Client();
             $url = "https://graph.facebook.com/v2.6/me/messages";
             $messageText = strtolower($input['message']);
             $senderId = $input['senderid'];
