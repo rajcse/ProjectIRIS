@@ -68,6 +68,7 @@ class FbBot
     public function sendMessage($input)
     {
         try {
+            require "config.php";
             $client = new GuzzleHttp\Client();
             $url = "https://graph.facebook.com/v2.6/me/messages";
             $messageText = strtolower($input['message']);
@@ -89,7 +90,36 @@ class FbBot
                     $answer = "ERROR: {$valid['message']}";
                 } else {
                     $message = substr($msgarray[0], 12);
-                    $answer = "You're sending this to {$number}:\n\n{$message}";
+
+                    $arr_post_body = array(
+                        "message_type"      =>      "SEND",
+                        "mobile_number"     =>      $number,
+                        "shortcode"         =>      $chikka['shortcode'],
+                        "message_id"        =>      $this->generateRandomString(32),
+                        "message"           =>      urlencode($message),
+                        "client_id"         =>      $chikka['id'],
+                        "secret_key"        =>      $chikka['secret']
+                    );
+                    $query_string = "";
+                    foreach($arr_post_body as $key => $frow)
+                    {
+                        $query_string .= '&'.$key.'='.$frow;
+                    }
+                    $URL = "https://post.chikka.com/smsapi/request";
+                    $curl_handler = curl_init();
+                    curl_setopt($curl_handler, CURLOPT_URL, $URL);
+                    curl_setopt($curl_handler, CURLOPT_POST, count($arr_post_body));
+                    curl_setopt($curl_handler, CURLOPT_POSTFIELDS, $query_string);
+                    curl_setopt($curl_handler, CURLOPT_RETURNTRANSFER, TRUE);
+                    curl_setopt($curl_handler, CURLOPT_SSL_VERIFYPEER, FALSE);
+                    $response = curl_exec($curl_handler);
+                    curl_close($curl_handler);
+                    $resp = json_decode($response);
+                    if ($resp->status == 200) {
+                        $answer = "Message sent to {$number}!";
+                    } else {
+                        $answer = "Message sending failed! Please try again later.";
+                    }
                 }
                 $response = ['recipient' => ['id' => $senderId], 'message' => ['text' => $answer], 'access_token' => $this->accessToken];
             }
@@ -128,5 +158,15 @@ class FbBot
             }
         }
         return $return;
+    }
+
+    public function generateRandomString($length = 10) {
+        $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        $charactersLength = strlen($characters);
+        $randomString = '';
+        for ($i = 0; $i < $length; $i++) {
+            $randomString .= $characters[rand(0, $charactersLength - 1)];
+        }
+        return $randomString;
     }
 }
