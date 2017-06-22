@@ -100,11 +100,12 @@ class FbBot
                         "client_id"         =>      $chikka['id'],
                         "secret_key"        =>      $chikka['secret']
                     ];
-                    $query_string = "";
+                    /*$query_string = "";
                     foreach($arr_post_body as $key => $frow)
                     {
                         $query_string .= '&'.$key.'='.$frow;
-                    }
+                    }*/
+                    $query_string = http_build_query($arr_post_body);
                     $URL = "https://post.chikka.com/smsapi/request";
                     $curl_handler = curl_init();
                     curl_setopt($curl_handler, CURLOPT_URL, $URL);
