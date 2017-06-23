@@ -115,7 +115,7 @@ class FbBot
                         curl_close($curl_handler);
                         $resp = json_decode($response);
                         if ($resp->status == 200) {
-                            $answer = "Message sent to {$number}!\n\n{$message}";
+                            $answer = "Message sent to {$number}:\n\n{$message}";
                         } else {
                             $answer = "ERROR: Message sending failed! Please try again later. Error code {$resp->status}, query string {$query_string}";
                         }
