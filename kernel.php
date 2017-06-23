@@ -80,7 +80,10 @@ class FbBot
                 'content-type' => 'application/json'
             ];
 
-            if ($msgarray[0][0] == 'help') {
+            $answer = $msgarray[0][0];
+            $response = ['recipient' => ['id' => $senderId], 'message' => ['text' => $answer], 'access_token' => $this->accessToken];
+
+            /*if ($msgarray[0][0] == 'help') {
                 $answer = "My name is Iris. To send a message, enter a phone number and a slash, followed by your message. For example: 09771234567/Hello, my name is Iris.";
                 $response = ['recipient' => ['id' => $senderId], 'message' => ['text' => $answer], 'access_token' => $this->accessToken];
             } else if ($msgarray[0][0] == 'debug') {
@@ -127,7 +130,7 @@ class FbBot
                     }
                 }
                 $response = ['recipient' => ['id' => $senderId], 'message' => ['text' => $answer], 'access_token' => $this->accessToken];
-            }
+            }*/
 
             $client->post($url, ['query' => $response, 'headers' => $header]);
             return true;
