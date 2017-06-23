@@ -79,19 +79,17 @@ class FbBot
                 'content-type' => 'application/json'
             ];
 
-            if (in_array('help', $msgarray)) {
+            if ($messageText == 'help') {
                 $answer = "My name is Iris. To send a message, enter a phone number and a slash, followed by your message. For example: 09771234567/Hello, my name is Iris.";
                 $response = ['recipient' => ['id' => $senderId], 'message' => ['text' => $answer], 'access_token' => $this->accessToken];
             } else {
-                $answer = $messageText;
-                /*
                 // Try to parse
                 $number = substr($msgarray[0], 0, 11);
                 $valid = $this->validNumber($number);
                 if (!$valid['status']) {
                     $answer = "ERROR: {$valid['message']}";
                 } else {
-                    $message = substr($msgarray[0], 12);
+                    $message = substr($messageText, 12);
                     if (strlen($message) > 420) {
                         $answer = "ERROR: Message too long. Maximum is 420 characters.";
                     } else {
@@ -126,7 +124,7 @@ class FbBot
                             $answer = "ERROR: Message sending failed! Please try again later. Error code {$resp->status}, query string {$query_string}";
                         }
                     }
-                }*/
+                }
                 $response = ['recipient' => ['id' => $senderId], 'message' => ['text' => $answer], 'access_token' => $this->accessToken];
             }
 
