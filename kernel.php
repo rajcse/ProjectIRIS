@@ -83,6 +83,8 @@ class FbBot
                 $answer = "My name is Iris. To send a message, enter a phone number and a slash, followed by your message. For example: 09771234567/Hello, my name is Iris.";
                 $response = ['recipient' => ['id' => $senderId], 'message' => ['text' => $answer], 'access_token' => $this->accessToken];
             } else {
+                $answer = print_r($msgarray, true);
+                /*
                 // Try to parse
                 $number = substr($msgarray[0], 0, 11);
                 $valid = $this->validNumber($number);
@@ -124,7 +126,7 @@ class FbBot
                             $answer = "ERROR: Message sending failed! Please try again later. Error code {$resp->status}, query string {$query_string}";
                         }
                     }
-                }
+                }*/
                 $response = ['recipient' => ['id' => $senderId], 'message' => ['text' => $answer], 'access_token' => $this->accessToken];
             }
 
