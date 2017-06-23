@@ -98,7 +98,7 @@ class FbBot
                             "mobile_number"     =>      $number,
                             "shortcode"         =>      $chikka['shortcode'],
                             "message_id"        =>      $this->generateRandomString(32),
-                            "message"           =>      urlencode($message),
+                            "message"           =>      $message,
                             "client_id"         =>      $chikka['id'],
                             "secret_key"        =>      $chikka['secret']
                         ];
