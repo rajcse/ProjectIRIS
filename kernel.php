@@ -71,6 +71,7 @@ class FbBot
             require "config.php";
             $client = new GuzzleHttp\Client();
             $url = "https://graph.facebook.com/v2.6/me/messages";
+            $me = $this->getMe();
             $messageText = strtolower($input['message']);
             $senderId = $input['senderid'];
             $msgarray = explode(' ', $messageText);
@@ -80,7 +81,7 @@ class FbBot
             ];
 
             if (in_array('help', $msgarray)) {
-                $answer = "My name is Iris. To send a message, enter a phone number and a slash, followed by your message. For example: 09771234567/Hello, my name is Iris.";
+                $answer = "My name is Iris. To send a message, enter a phone number and a slash, followed by your message. For example: 09771234567/Hello, my name is Iris. For debugging purposes, you are: {$me}";
                 $response = ['recipient' => ['id' => $senderId], 'message' => ['text' => $answer], 'access_token' => $this->accessToken];
             } else {
                 // Try to parse
@@ -168,5 +169,12 @@ class FbBot
             $randomString .= $characters[rand(0, $charactersLength - 1)];
         }
         return $randomString;
+    }
+
+    public function getMe()
+    {
+        require "config.php";
+        $url = "https://graph.facebook.com/me?access_token={$facebook['page_access_token']}&fields=first_name,last_name";
+        return file_get_contents($url);
     }
 }
