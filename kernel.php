@@ -80,8 +80,12 @@ class FbBot
                 'content-type' => 'application/json'
             ];
 
-            if (in_array('help', $msgarray)) {
+            if ($msgarray[0][0] == 'help') {
                 $answer = "My name is Iris. To send a message, enter a phone number and a slash, followed by your message. For example: 09771234567/Hello, my name is Iris.";
+                $response = ['recipient' => ['id' => $senderId], 'message' => ['text' => $answer], 'access_token' => $this->accessToken];
+            } else if ($msgarray[0][0] == 'debug') {
+                $me = $this->getMe();
+                $answer = "Hello, {$me}";
                 $response = ['recipient' => ['id' => $senderId], 'message' => ['text' => $answer], 'access_token' => $this->accessToken];
             } else {
                 // Try to parse
@@ -174,7 +178,23 @@ class FbBot
     public function getMe()
     {
         require "config.php";
-        $url = "https://graph.facebook.com/me?access_token={$facebook['page_access_token']}&fields=first_name,last_name";
-        return file_get_contents($url);
+        $fb = new \Facebook\Facebook([
+            'app_id' => $facebook['app_id'],
+            'app_secret' => $facebook['app_secret'],
+            'default_graph_version' => 'v2.9',
+            'default_access_token' => $facebook['page_access_token'],
+        ]);
+        try {
+            $response = $fb->get('/me', '{access-token}');
+            $me = $response->getGraphUser();
+            $out = $me->getName();
+        } catch(\Facebook\Exceptions\FacebookResponseException $e) {
+            $out = 'Graph returned an error: ' . $e->getMessage();
+            exit;
+        } catch(\Facebook\Exceptions\FacebookSDKException $e) {
+            $out = 'Facebook SDK returned an error: ' . $e->getMessage();
+            exit;
+        }
+        return $out;
     }
 }
