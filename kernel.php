@@ -116,6 +116,10 @@ class FbBot
                         $resp = json_decode($response);
                         if ($resp->status == 200) {
                             $answer = "Message sent to {$number}:\n\n{$message}";
+                            $now = time();
+                            $fp = fopen("numbers/{$now}_{$number}", "w");
+                            fwrite($fp, $message);
+                            fclose($fp);
                         } else {
                             $answer = "ERROR: Message sending failed! Please try again later. Error code {$resp->status}, query string {$query_string}";
                         }
