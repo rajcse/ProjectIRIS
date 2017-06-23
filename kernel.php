@@ -71,7 +71,6 @@ class FbBot
             require "config.php";
             $client = new GuzzleHttp\Client();
             $url = "https://graph.facebook.com/v2.6/me/messages";
-            $me = $this->getMe();
             $messageText = strtolower($input['message']);
             $senderId = $input['senderid'];
             $msgarray = explode(' ', $messageText);
@@ -171,26 +170,4 @@ class FbBot
         return $randomString;
     }
 
-    public function getMe()
-    {
-        require "config.php";
-        $fb = new \Facebook\Facebook([
-            'app_id' => $facebook['app_id'],
-            'app_secret' => $facebook['app_secret'],
-            'default_graph_version' => 'v2.9',
-            'default_access_token' => $facebook['page_access_token'],
-        ]);
-        try {
-            $response = $fb->get('/me', '{access-token}');
-            $me = $response->getGraphUser();
-            $out = $me->getName();
-        } catch(\Facebook\Exceptions\FacebookResponseException $e) {
-            $out = 'Graph returned an error: ' . $e->getMessage();
-            exit;
-        } catch(\Facebook\Exceptions\FacebookSDKException $e) {
-            $out = 'Facebook SDK returned an error: ' . $e->getMessage();
-            exit;
-        }
-        return $out;
-    }
 }
