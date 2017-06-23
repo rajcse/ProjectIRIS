@@ -79,9 +79,10 @@ class FbBot
                 'content-type' => 'application/json'
             ];
 
-            if (strtolower($messageText) == 'help') {
+            if (strtolower($messageText) == 'help' || strtolower($messageText) == 'explain yourself') {
                 $answer = "My name is Iris. To send a message, enter a phone number and a slash, followed by your message. For example: 09771234567/Hello, my name is Iris.";
-                $response = ['recipient' => ['id' => $senderId], 'message' => ['text' => $answer], 'access_token' => $this->accessToken];
+            } else if (strtolower($messageText) == 'about' || strtolower($messageText) == 'introduce yourself') {
+                $answer = "I am Iris, a bot made by Liam Demafelix. I am but a simple robot made to serve my master. You can find more info at https://github.com/liamdemafelix/ProjectIRIS";
             } else {
                 // Try to parse
                 $number = substr($msgarray[0], 0, 11);
@@ -125,9 +126,9 @@ class FbBot
                         }
                     }
                 }
-                $response = ['recipient' => ['id' => $senderId], 'message' => ['text' => $answer], 'access_token' => $this->accessToken];
             }
 
+            $response = ['recipient' => ['id' => $senderId], 'message' => ['text' => $answer], 'access_token' => $this->accessToken];
             $client->post($url, ['query' => $response, 'headers' => $header]);
             return true;
         }
