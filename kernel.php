@@ -71,7 +71,7 @@ class FbBot
             require "config.php";
             $client = new GuzzleHttp\Client();
             $url = "https://graph.facebook.com/v2.6/me/messages";
-            $messageText = strtolower($input['message']);
+            $messageText = $input['message'];
             $senderId = $input['senderid'];
             $msgarray = explode(' ', $messageText);
             $response = null;
@@ -83,7 +83,7 @@ class FbBot
                 $answer = "My name is Iris. To send a message, enter a phone number and a slash, followed by your message. For example: 09771234567/Hello, my name is Iris.";
                 $response = ['recipient' => ['id' => $senderId], 'message' => ['text' => $answer], 'access_token' => $this->accessToken];
             } else {
-                $answer = print_r($msgarray, true);
+                $answer = $messageText;
                 /*
                 // Try to parse
                 $number = substr($msgarray[0], 0, 11);
