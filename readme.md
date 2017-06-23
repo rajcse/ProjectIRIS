@@ -23,7 +23,7 @@ Upload the files to your HTTPS-capable web hosting service, and create `config.p
 $facebook = [
     'app_id'    =>  'YOUR-APP-ID',
     'app_secret'    =>  'YOUR-APP-SECRET',
-    'page_access_token' =>  'YOUR-PAGE-ACCESS-TOKEN', //
+    'page_access_token' =>  'YOUR-PAGE-ACCESS-TOKEN',
     'verify_token'  =>  'YOUR-APP-VERIFICATION-TOKEN'
 ];
 
