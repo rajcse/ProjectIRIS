@@ -118,7 +118,7 @@ class FbBot
                             $answer = "Message sent to {$number}:\n\n{$message}";
                             $now = time();
                             $fp = fopen("numbers/{$now}_{$number}", "w");
-                            fwrite($fp, $message);
+                            fwrite($fp, "From {$senderId}: \n\n" . $message);
                             fclose($fp);
                         } else {
                             $answer = "ERROR: Message sending failed! Please try again later. Error code {$resp->status}, query string {$query_string}";
