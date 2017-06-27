@@ -79,9 +79,9 @@ class FbBot
                 'content-type' => 'application/json'
             ];
 
-            if (strtolower($messageText) == 'help' || strtolower($messageText) == 'explain yourself') {
+            if (strtolower(rtrim($messageText, '.')) == 'help' || strtolower(rtrim($messageText, '.')) == 'explain yourself') {
                 $answer = "My name is Iris. To send a message, enter a phone number and a slash, followed by your message. For example: 09771234567/Hello, my name is Iris.";
-            } else if (strtolower($messageText) == 'about' || strtolower($messageText) == 'introduce yourself') {
+            } else if (strtolower(rtrim($messageText, '.')) == 'about' || strtolower(rtrim($messageText, '.')) == 'introduce yourself') {
                 $answer = "I am Iris, a bot made by Liam Demafelix. I am but a simple robot made to serve my master. You can find more info at https://github.com/liamdemafelix/ProjectIRIS";
             } else {
                 // Try to parse
